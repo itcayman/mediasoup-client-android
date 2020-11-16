@@ -2,8 +2,6 @@ package org.mediasoup.droid;
 
 import android.text.TextUtils;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +16,8 @@ import org.webrtc.VideoTrack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -176,9 +176,9 @@ public class MediasoupClientTest extends BaseTest {
       String appData = "{\"baz\":\"BAZ\"}";
 
       List<RtpParameters.Encoding> encodings = new ArrayList<>();
-      encodings.add(RTCUtils.genRtpEncodingParameters(null, false, 0, 0, 0, 0, 1.0d, 1L));
-      encodings.add(RTCUtils.genRtpEncodingParameters(null, false, 0, 0, 0, 0, 1.0d, 2L));
-      encodings.add(RTCUtils.genRtpEncodingParameters(null, false, 0, 0, 0, 0, 1.0d, 3L));
+      encodings.add(RTCUtils.genRtpEncodingParameters("h", true, 1.0d));
+      encodings.add(RTCUtils.genRtpEncodingParameters("m", true, 2.0d));
+      encodings.add(RTCUtils.genRtpEncodingParameters("l", true, 4.0d));
 
       audioTrack = PeerConnectionUtils.createAudioTrack(mContext, "audio-track-id");
       assertNotEquals(0, RTCUtils.getNativeMediaStreamTrack(audioTrack));

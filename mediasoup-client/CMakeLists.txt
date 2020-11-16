@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(mediasoupclient_so LANGUAGES CXX)
 
@@ -8,8 +8,9 @@ set(mediasoup_client_so_VERSION_MINOR 0)
 set(mediasoup_client_so_VERSION_PATCH 8)
 
 # C++ standard requirements.
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(
 	SOURCE_DIR
@@ -32,8 +33,8 @@ set(
 )
 
 # TODO(haiyang wu): add condition
-list(APPEND SOURCE_FILES ${PROJECT_SOURCE_DIR}/src/androidTest/jni/parameters_jni.cpp)
-list(APPEND SOURCE_FILES ${PROJECT_SOURCE_DIR}/deps/libmediasoupclient/test/src/fakeParameters.cpp)
+#list(APPEND SOURCE_FILES ${PROJECT_SOURCE_DIR}/src/androidTest/jni/parameters_jni.cpp)
+#list(APPEND SOURCE_FILES ${PROJECT_SOURCE_DIR}/deps/libmediasoupclient/test/src/fakeParameters.cpp)
 
 # Create target.
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
@@ -59,6 +60,12 @@ add_subdirectory("deps/libmediasoupclient")
 set_source_files_properties(${SOURCE_FILES}
 	PROPERTIES COMPILE_FLAGS -Wall -Wextra -Wpedantic)
 
+set(LIBWEBRTC_INCLUDE_PATH "/Users/tianchao/WebRTC/webrtc/src")
+set(LIBWEBRTC_BINARY_PATH "/Users/tianchao/WebRTC/mediasoup-client-android/mediasoup-client/deps/webrtc/lib")
+
+message("\n=========== mediasoupclient_so Build Configuration ===========\n")
+message(STATUS "LIBWEBRTC_INCLUDE_PATH      : " ${LIBWEBRTC_INCLUDE_PATH})
+
 include_directories(SYSTEM "${LIBWEBRTC_INCLUDE_PATH}/third_party/abseil-cpp")
 
 # Private (implementation) header files.
@@ -66,7 +73,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	"${SOURCE_DIR}/"
 	"${SOURCE_DIR}/include"
 	"${PROJECT_SOURCE_DIR}/deps/libmediasoupclient/include"
-	"${PROJECT_SOURCE_DIR}/deps/libmediasoupclient/test/include"
+#	"${PROJECT_SOURCE_DIR}/deps/libmediasoupclient/test/include"
 	"${PROJECT_SOURCE_DIR}/deps/libmediasoupclient/deps/libsdptransform/include"
 	"${LIBWEBRTC_INCLUDE_PATH}"
 	"${LIBWEBRTC_INCLUDE_PATH}/third_party/abseil-cpp"

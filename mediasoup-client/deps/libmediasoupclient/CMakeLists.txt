@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(mediasoupclient LANGUAGES CXX)
 
@@ -14,17 +14,20 @@ configure_file (
 )
 
 # C++ standard requirements.
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Project options.
+# Project options.v
 option(MEDIASOUPCLIENT_BUILD_TESTS "Build unit tests" OFF)
 option(MEDIASOUPCLIENT_LOG_TRACE   "Enable MSC_LOG_TRACE (See Logger.hpp)" OFF)
 option(MEDIASOUPCLIENT_LOG_DEV     "Enable MSC_LOG_DEV (See Logger.hpp)" OFF)
 
 # Project configuration.
-set(LIBWEBRTC_INCLUDE_PATH "" CACHE STRING "libwebrtc include path")
-set(LIBWEBRTC_BINARY_PATH "" CACHE STRING "libwebrtc binary path")
+#set(LIBWEBRTC_INCLUDE_PATH "" CACHE STRING "libwebrtc include path")
+#set(LIBWEBRTC_BINARY_PATH "" CACHE STRING "libwebrtc binary path")
+set(LIBWEBRTC_INCLUDE_PATH "/Users/tianchao/WebRTC/webrtc/src")
+set(LIBWEBRTC_BINARY_PATH "/Users/tianchao/WebRTC/mediasoup-client-android/mediasoup-client/deps/webrtc/lib")
 
 if(NOT LIBWEBRTC_INCLUDE_PATH)
 	message(FATAL_ERROR "LIBWEBRTC_INCLUDE_PATH not provided")
@@ -127,6 +130,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 # Public (interface) dependencies.
 if("${ANDROID_ABI}" STREQUAL "")
+	message(STATUS "LIBWEBRTC_PATH1      : " ${LIBWEBRTC_BINARY_PATH}/libwebrtc${CMAKE_STATIC_LIBRARY_SUFFIX})
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 		sdptransform
 		${LIBWEBRTC_BINARY_PATH}/libwebrtc${CMAKE_STATIC_LIBRARY_SUFFIX}
@@ -135,7 +139,8 @@ else()
 	# Add '-whole-archive' to keep symbols from peerconnection_jni.
 	# https://stackoverflow.com/a/5687860/2085408
 	SET (webrtc -Wl,--whole-archive ${LIBWEBRTC_BINARY_PATH}/${ANDROID_ABI}/libwebrtc${CMAKE_STATIC_LIBRARY_SUFFIX}  -Wl,--no-whole-archive)
-
+	SET (ffmpeg -Wl,--whole-archive ${LIBWEBRTC_BINARY_PATH}/${ANDROID_ABI}/libffmpeg_internal${CMAKE_STATIC_LIBRARY_SUFFIX}  -Wl,--no-whole-archive)
+	message(STATUS "LIBWEBRTC_PATH2      : " ${LIBWEBRTC_BINARY_PATH}/${ANDROID_ABI}/libwebrtc${CMAKE_STATIC_LIBRARY_SUFFIX})
 	target_link_libraries(${PROJECT_NAME} PUBLIC
 			sdptransform
 			${webrtc}

@@ -31,21 +31,11 @@ public class RTCUtils {
   public static RtpParameters.Encoding genRtpEncodingParameters(
       String rid,
       boolean active,
-      Integer maxBitrateBps,
-      Integer minBitrateBps,
-      Integer maxFramerate,
-      Integer numTemporalLayers,
-      Double scaleResolutionDownBy,
-      Long ssrc) {
+      Double scaleResolutionDownBy) {
     return new RtpParameters.Encoding(
         rid,
         active,
-        maxBitrateBps,
-        minBitrateBps,
-        maxFramerate,
-        numTemporalLayers,
-        scaleResolutionDownBy,
-        ssrc);
+        scaleResolutionDownBy);
   }
 
   public static MediaStreamTrack createMediaStreamTrack(long nativeTrack) {

@@ -38,7 +38,7 @@ namespace mediasoupclient
 		auto offer                 = pc->CreateOffer(options);
 		auto sdpObject             = sdptransform::parse(offer);
 		auto nativeRtpCapabilities = Sdp::Utils::extractRtpCapabilities(sdpObject);
-
+        MSC_DEBUG("[offerSdp:%s]", offer.c_str());
 		return nativeRtpCapabilities;
 	}
 
@@ -666,14 +666,14 @@ static void fillJsonRtpEncodingParameters(json& jsonEncoding, const webrtc::RtpE
 	if (encoding.max_framerate)
 		jsonEncoding["maxFramerate"] = *encoding.max_framerate;
 
-	if (encoding.scale_framerate_down_by)
-		jsonEncoding["scaleFramerateDownBy"] = *encoding.scale_framerate_down_by;
+	if (encoding.num_temporal_layers)
+		jsonEncoding["numTemporalLayers"] = *encoding.num_temporal_layers;
 
 	if (encoding.scale_resolution_down_by)
 		jsonEncoding["scaleResolutionDownBy"] = *encoding.scale_resolution_down_by;
 
-	if (encoding.dtx && encoding.dtx == webrtc::DtxStatus::ENABLED)
-		jsonEncoding["dtx"] = true;
+//	if (encoding.dtx && encoding.dtx == webrtc::DtxStatus::ENABLED)
+//		jsonEncoding["dtx"] = true;
 
 	jsonEncoding["networkPriority"] = encoding.network_priority;
 }

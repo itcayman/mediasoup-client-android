@@ -154,6 +154,11 @@ namespace mediasoupclient
 			{ "audio", ortc::getSendingRemoteRtpParameters("audio", *extendedRtpCapabilities) },
 			{ "video", ortc::getSendingRemoteRtpParameters("video", *extendedRtpCapabilities) }
 		};
+        if (peerConnectionOptions->factory != nullptr) {
+            MSC_WARN("=====factory not null");
+        } else {
+            MSC_WARN("=====factory is null");
+        }
 
 		this->sendHandler.reset(new SendHandler(
 		  this,
@@ -206,9 +211,9 @@ namespace mediasoupclient
 				  encoding.active                   = entry.active;
 				  encoding.max_bitrate_bps          = entry.max_bitrate_bps;
 				  encoding.max_framerate            = entry.max_framerate;
-				  encoding.scale_framerate_down_by  = entry.scale_framerate_down_by;
+				  encoding.num_temporal_layers      = entry.num_temporal_layers;
 				  encoding.scale_resolution_down_by = entry.scale_resolution_down_by;
-				  encoding.dtx                      = entry.dtx;
+//				  encoding.dtx                      = entry.dtx;
 				  encoding.network_priority         = entry.network_priority;
 
 				  normalizedEncodings.push_back(encoding);

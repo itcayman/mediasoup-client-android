@@ -104,7 +104,8 @@ namespace mediasoupclient
 				MSC_THROW_TYPE_ERROR("missing codec.mimeType");
 
 			std::smatch mimeTypeMatch;
-			std::regex_match(mimeTypeIt->get<std::string>(), mimeTypeMatch, MimeTypeRegex);
+			std::string mimeTypeStr = mimeTypeIt->get<std::string>();
+			std::regex_match(mimeTypeStr, mimeTypeMatch, MimeTypeRegex);
 
 			if (mimeTypeMatch.empty())
 				MSC_THROW_TYPE_ERROR("invalid codec.mimeType");
@@ -349,7 +350,8 @@ namespace mediasoupclient
 				MSC_THROW_TYPE_ERROR("missing codec.mimeType");
 
 			std::smatch mimeTypeMatch;
-			std::regex_match(mimeTypeIt->get<std::string>(), mimeTypeMatch, MimeTypeRegex);
+			std::string mimeTypeStr = mimeTypeIt->get<std::string>();
+			std::regex_match(mimeTypeStr, mimeTypeMatch, MimeTypeRegex);
 
 			if (mimeTypeMatch.empty())
 				MSC_THROW_TYPE_ERROR("invalid codec.mimeType");
@@ -792,7 +794,8 @@ namespace mediasoupclient
 			}
 
 			std::smatch protocolMatch;
-			std::regex_match(protocolIt->get<std::string>(), protocolMatch, ProtocolRegex);
+			std::string protocolStr = protocolIt->get<std::string>();
+			std::regex_match(protocolStr, protocolMatch, ProtocolRegex);
 
 			if (protocolMatch.empty())
 				MSC_THROW_TYPE_ERROR("invalid params.protocol");
@@ -808,7 +811,8 @@ namespace mediasoupclient
 			}
 
 			std::smatch typeMatch;
-			std::regex_match(typeIt->get<std::string>(), typeMatch, TypeRegex);
+			std::string typeStr = typeIt->get<std::string>();
+			std::regex_match(typeStr, typeMatch, TypeRegex);
 
 			if (typeMatch.empty())
 				MSC_THROW_TYPE_ERROR("invalid params.type");
@@ -887,7 +891,8 @@ namespace mediasoupclient
 			}
 
 			std::smatch roleMatch;
-			std::regex_match(roleIt->get<std::string>(), roleMatch, RoleRegex);
+			std::string roleStr = roleIt->get<std::string>();
+			std::regex_match(roleStr, roleMatch, RoleRegex);
 
 			if (roleMatch.empty())
 				MSC_THROW_TYPE_ERROR("invalid params.role");
@@ -1649,6 +1654,8 @@ static bool matchCodecs(json& aCodec, const json& bCodec, bool strict, bool modi
 			if (aProfileId != bProfileId)
 				return false;
 		}
+	} else if (aMimeType == "video/vp8") {
+	    return false;
 	}
 
 	return true;
