@@ -44,6 +44,7 @@
 #define MSC_LOGGER_HPP
 
 #include <cstdio>  // std::snprintf(), std::fprintf(), stdout, stderr
+#include <cstdint> // uint8_t
 #include <cstdlib> // std::abort()
 #include <cstring>
 
@@ -64,8 +65,6 @@ namespace mediasoupclient
 		class LogHandlerInterface
 		{
 		public:
-			// TODO(HaiyangWu): pr ?
-			virtual ~LogHandlerInterface()                                = default;
 			virtual void OnLog(LogLevel level, char* payload, size_t len) = 0;
 		};
 
