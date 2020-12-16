@@ -105,6 +105,7 @@ namespace mediasoupclient
 
 		// Set SDP semantics to Unified Plan.
 		config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
+		config.set_cpu_adaptation(false);
 
 		// Create the webrtc::Peerconnection.
 		this->pc =

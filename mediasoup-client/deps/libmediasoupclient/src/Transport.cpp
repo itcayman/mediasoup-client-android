@@ -209,6 +209,7 @@ namespace mediasoupclient
 				  encoding.max_framerate            = entry.max_framerate;
 				  encoding.scale_resolution_down_by = entry.scale_resolution_down_by;
 				  encoding.network_priority         = entry.network_priority;
+				  encoding.num_temporal_layers      = entry.num_temporal_layers;
 
 				  normalizedEncodings.push_back(encoding);
 			  });

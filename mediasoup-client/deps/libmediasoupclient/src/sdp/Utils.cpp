@@ -30,8 +30,9 @@ namespace mediasoupclient
 				// Whether a m=audio/video section has been already found.
 				bool gotAudio = false;
 				bool gotVideo = false;
+				bool gotH264 = false;
 
-				for (const auto& m : sdpObject["media"])
+				for (auto& m : sdpObject["media"])
 				{
 					auto kind = m["type"].get<std::string>();
 
@@ -55,21 +56,33 @@ namespace mediasoupclient
 					}
 
 					// Get codecs.
-					for (const auto& rtp : m["rtp"])
+					for (auto& rtp : m["rtp"])
 					{
 						std::string mimeType(kind);
 						mimeType.append("/").append(rtp["codec"].get<std::string>());
 
+						auto parameters = json::object();
+						//@fujisheng
+						if (mimeType == "video/H264") {
+							if (gotH264) continue;
+
+							//add or update "profile-level-id"
+							parameters["profile-level-id"] = "42e02a";
+							parameters["level-asymmetry-allowed"] = 1;
+							parameters["packetization-mode"] = 1;
+							gotH264 = true;
+						}
+
 						// clang-format off
 						json codec =
-						{
-							{ "mimeType",             mimeType       },
-							{ "kind",                 kind           },
-							{ "clockRate",            rtp["rate"]    },
-							{ "preferredPayloadType", rtp["payload"] },
-							{ "rtcpFeedback",         json::array()  },
-							{ "parameters",           json::object() }
-						};
+								{
+										{ "mimeType",             mimeType       },
+										{ "kind",                 kind           },
+										{ "clockRate",            rtp["rate"]    },
+										{ "preferredPayloadType", rtp["payload"] },
+										{ "rtcpFeedback",         json::array()  },
+										{ "parameters",           parameters }
+								};
 						// clang-format on
 
 						if (kind == "audio")
@@ -86,9 +99,11 @@ namespace mediasoupclient
 					}
 
 					// Get codec parameters.
-					for (const auto& fmtp : m["fmtp"])
+					for (auto& fmtp : m["fmtp"])
 					{
+
 						auto parameters    = sdptransform::parseParams(fmtp["config"]);
+
 						auto jsonPayloadIt = codecsMap.find(fmtp["payload"]);
 
 						if (jsonPayloadIt == codecsMap.end())
@@ -100,7 +115,7 @@ namespace mediasoupclient
 					}
 
 					// Get RTCP feedback for each codec.
-					for (const auto& fb : m["rtcpFb"])
+					for (auto& fb : m["rtcpFb"])
 					{
 						auto jsonCodecIt = codecsMap.find(std::stoi(fb["payload"].get<std::string>()));
 
@@ -111,9 +126,9 @@ namespace mediasoupclient
 
 						// clang-format off
 						json feedback =
-						{
-							{"type", fb["type"]}
-						};
+								{
+										{"type", fb["type"]}
+								};
 						// clang-format on
 
 						auto jsonSubtypeIt = fb.find("subtype");
@@ -125,15 +140,15 @@ namespace mediasoupclient
 					}
 
 					// Get RTP header extensions.
-					for (const auto& ext : m["ext"])
+					for (auto& ext : m["ext"])
 					{
 						// clang-format off
 						json headerExtension =
-						{
-								{ "kind",        kind },
-								{ "uri",         ext["uri"] },
-								{ "preferredId", ext["value"] }
-						};
+								{
+										{ "kind",        kind },
+										{ "uri",         ext["uri"] },
+										{ "preferredId", ext["value"] }
+								};
 						// clang-format on
 
 						headerExtensions.push_back(headerExtension);
@@ -142,11 +157,11 @@ namespace mediasoupclient
 
 				// clang-format off
 				json rtpCapabilities =
-				{
-					{ "headerExtensions", headerExtensions },
-					{ "codecs",           json::array() },
-					{ "fecMechanisms",    json::array() } // TODO
-				};
+						{
+								{ "headerExtensions", headerExtensions },
+								{ "codecs",           json::array() },
+								{ "fecMechanisms",    json::array() } // TODO
+						};
 				// clang-format on
 
 				for (auto& kv : codecsMap)

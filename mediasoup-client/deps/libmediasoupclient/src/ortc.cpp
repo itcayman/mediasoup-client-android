@@ -1594,8 +1594,10 @@ static bool matchCodecs(json& aCodec, const json& bCodec, bool strict, bool modi
 		auto aPacketizationMode = getH264PacketizationMode(aCodec);
 		auto bPacketizationMode = getH264PacketizationMode(bCodec);
 
-		if (aPacketizationMode != bPacketizationMode)
+		if (aPacketizationMode != bPacketizationMode) {
+			MSC_WARN("matchCodecs: h264 packetization-mode not same, local=%d, remote=%d", aPacketizationMode, bPacketizationMode);
 			return false;
+		}
 
 		// If strict matching check profile-level-id.
 		if (strict)
@@ -1610,8 +1612,10 @@ static bool matchCodecs(json& aCodec, const json& bCodec, bool strict, bool modi
 			bParameters["packetization-mode"]      = std::to_string(bPacketizationMode);
 			bParameters["profile-level-id"]        = getH264ProfileLevelId(bCodec);
 
-			if (!webrtc::H264::IsSameH264Profile(aParameters, bParameters))
+			if (!webrtc::H264::IsSameH264Profile(aParameters, bParameters)) {
+				MSC_WARN("matchCodecs: h264 profile not same local=%s, remote=%s", aParameters["profile-level-id"].c_str(), bParameters["profile-level-id"].c_str());
 				return false;
+			}
 
 			webrtc::H264::CodecParameterMap newParameters;
 
@@ -1621,6 +1625,7 @@ static bool matchCodecs(json& aCodec, const json& bCodec, bool strict, bool modi
 			}
 			catch (std::runtime_error)
 			{
+				MSC_WARN("matchCodecs: h264 generateProfileLeveIdForAnswer error");
 				return false;
 			}
 
@@ -1648,7 +1653,7 @@ static bool matchCodecs(json& aCodec, const json& bCodec, bool strict, bool modi
 				return false;
 		}
 	}
-
+    MSC_DEBUG("matchCodecs success %s", aMimeType.c_str());
 	return true;
 }
 
@@ -1698,7 +1703,7 @@ static uint8_t getH264PacketizationMode(const json& codec)
 	)
 	// clang-format on
 	{
-		return 0;
+		return 1;
 	}
 
 	return packetizationModeIt->get<uint8_t>();

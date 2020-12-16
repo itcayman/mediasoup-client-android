@@ -55,15 +55,20 @@ JNI_GENERATOR_EXPORT void Java_org_mediasoup_droid_Device_nativeFreeDevice(
 }
 
 static void JNI_Device_Load(JNIEnv* env, jlong device,
+                            const base::android::JavaParamRef<jobject>& configuration,
+                            jlong peerConnectionFactory,
     const base::android::JavaParamRef<jstring>& routerRtpCapabilities);
 
 JNI_GENERATOR_EXPORT void Java_org_mediasoup_droid_Device_nativeLoad(
     JNIEnv* env,
     jclass jcaller,
     jlong device,
+    jobject configuration,
+    jlong peerConnectionFactory,
     jstring routerRtpCapabilities) {
-  return JNI_Device_Load(env, device, base::android::JavaParamRef<jstring>(env,
-      routerRtpCapabilities));
+    return JNI_Device_Load(env, device,
+                           base::android::JavaParamRef<jobject>(env, configuration), peerConnectionFactory,
+                           base::android::JavaParamRef<jstring>(env,routerRtpCapabilities));
 }
 
 static jboolean JNI_Device_IsLoaded(JNIEnv* env, jlong device);

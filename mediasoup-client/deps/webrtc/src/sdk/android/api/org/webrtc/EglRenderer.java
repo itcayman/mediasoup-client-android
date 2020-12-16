@@ -244,8 +244,8 @@ public class EglRenderer implements VideoSink {
       renderThreadHandler.post(eglSurfaceCreationRunnable);
       final long currentTimeNs = System.nanoTime();
       resetStatistics(currentTimeNs);
-      renderThreadHandler.postDelayed(
-          logStatisticsRunnable, TimeUnit.SECONDS.toMillis(LOG_INTERVAL_SEC));
+//      renderThreadHandler.postDelayed(
+//          logStatisticsRunnable, TimeUnit.SECONDS.toMillis(LOG_INTERVAL_SEC));
     }
   }
 
